@@ -91,58 +91,81 @@
   <h2 class="section-title">⚡ Individual Services</h2>
   <div class="container" id="individualPlans"></div>
 
-  <script>
-    let discount = 0;
-    let appliedCoupon = "NONE";
+<script>
+  let discount = 0;
+  let appliedCoupon = "NONE";
 
-    const phoneNumber = "918840583727";
+  const phoneNumber = "918840583727";
 
-    function generateOrderId() {
-      return "ORD" + Date.now();
+  // ✅ NEW CLEAN ORDER ID
+  function generateOrderId() {
+    const now = new Date();
+
+    const date =
+      now.getFullYear().toString().slice(-2) +
+      (now.getMonth() + 1).toString().padStart(2, '0') +
+      now.getDate().toString().padStart(2, '0');
+
+    const time =
+      now.getHours().toString().padStart(2, '0') +
+      now.getMinutes().toString().padStart(2, '0');
+
+    return `ORD-${date}-${time}`;
+  }
+
+  const comboPlans = [
+    { name: "Starter", price: 199, details: "15K Views • 300 Likes • 80 Comments • 250 Reposts" },
+    { name: "Basic", price: 349, details: "40K Views • 700 Likes • 200 Comments • 400 Reposts" },
+    { name: "Growth ⭐", price: 699, details: "95K Views • 1.5K Likes • 400 Comments • 600 Reposts" },
+    { name: "Pro", price: 1299, details: "250K Views • 3K Likes • 600 Comments • 1K Reposts" },
+    { name: "Elite", price: 2499, details: "600K Views • 8K Likes • 1.5K Comments • 3K Reposts" }
+  ];
+
+  const individualPlans = [
+    { name: "1K Views", price: 9, type: "views" },
+    { name: "5K Views", price: 39, type: "views" },
+    { name: "10K Views", price: 69, type: "views" },
+    { name: "20K Views", price: 129, type: "views" },
+
+    { name: "100 Likes", price: 29, type: "likes" },
+    { name: "200 Likes", price: 59, type: "likes" },
+    { name: "500 Likes", price: 119, type: "likes" },
+    { name: "1K Likes", price: 199, type: "likes" },
+
+    { name: "100 Comments", price: 49, type: "comments" },
+    { name: "500 Comments", price: 179, type: "comments" },
+    { name: "1K Comments", price: 329, type: "comments" },
+
+    { name: "500 Reposts", price: 59, type: "reposts" },
+    { name: "1K Reposts", price: 99, type: "reposts" },
+    { name: "2K Reposts", price: 149, type: "reposts" },
+
+    { name: "100 Story Views", price: 19, type: "story" },
+    { name: "500 Story Views", price: 79, type: "story" },
+    { name: "1K Story Views", price: 119, type: "story" }
+  ];
+
+  function getColor(type) {
+    switch (type) {
+      case "views": return "#38bdf8";     // blue
+      case "likes": return "#f472b6";     // pink
+      case "comments": return "#34d399";  // green
+      case "reposts": return "#facc15";   // yellow
+      case "story": return "#a78bfa";     // purple
+      default: return "#38bdf8";
     }
+  }
 
-    const comboPlans = [
-      { name: "Starter", price: 199, details: "15K Views • 300 Likes • 80 Comments • 250 Reposts" },
-      { name: "Basic", price: 349, details: "40K Views • 700 Likes • 200 Comments • 400 Reposts" },
-      { name: "Growth ⭐", price: 699, details: "95K Views • 1.5K Likes • 400 Comments • 600 Reposts" },
-      { name: "Pro", price: 1299, details: "250K Views • 3K Likes • 600 Comments • 1K Reposts" },
-      { name: "Elite", price: 2499, details: "600K Views • 8K Likes • 1.5K Comments • 3K Reposts" }
-    ];
+  function renderCombo() {
+    const container = document.getElementById('comboPlans');
+    container.innerHTML = '';
 
-    const individualPlans = [
-      { name: "1K Views", price: 9 },
-      { name: "5K Views", price: 39 },
-      { name: "10K Views", price: 69 },
-      { name: "20K Views", price: 129 },
+    comboPlans.forEach(plan => {
+      let finalPrice = Math.round(plan.price - (plan.price * discount / 100));
 
-      { name: "100 Likes", price: 29 },
-      { name: "200 Likes", price: 59 },
-      { name: "500 Likes", price: 119 },
-      { name: "1K Likes", price: 199 },
+      const orderId = generateOrderId();
 
-      { name: "100 Comments", price: 49 },
-      { name: "500 Comments", price: 179 },
-      { name: "1K Comments", price: 329 },
-
-      { name: "500 Reposts", price: 59 },
-      { name: "1K Reposts", price: 99 },
-      { name: "2K Reposts", price: 149 },
-
-      { name: "100 Story Views", price: 19 },
-      { name: "500 Story Views", price: 79 },
-      { name: "1K Story Views", price: 119 }
-    ];
-
-    function renderCombo() {
-      const container = document.getElementById('comboPlans');
-      container.innerHTML = '';
-
-      comboPlans.forEach(plan => {
-        let finalPrice = Math.round(plan.price - (plan.price * discount / 100));
-
-        const orderId = generateOrderId();
-
-        const msg = encodeURIComponent(
+      const msg = encodeURIComponent(
 `Hello 👋
 
 I would like to place an order:
@@ -152,32 +175,33 @@ I would like to place an order:
 🎟 Coupon: ${appliedCoupon}  
 🆔 Order ID: ${orderId}  
 
-Please share payment details to proceed 👋🏻`
+Please share payment details to proceed 👍`
 );
 
-        const link = `https://wa.me/${phoneNumber}?text=${msg}`;
+      const link = `https://wa.me/${phoneNumber}?text=${msg}`;
 
-        container.innerHTML += `
-          <div class="card">
-            <h3>${plan.name}</h3>
-            <div class="price">₹${finalPrice}</div>
-            <p>${plan.details}</p>
-            <a href="${link}" target="_blank">
-              <button>Buy Now</button>
-            </a>
-          </div>
-        `;
-      });
-    }
+      container.innerHTML += `
+        <div class="card">
+          <h3>${plan.name}</h3>
+          <div class="price">₹${finalPrice}</div>
+          <p>${plan.details}</p>
+          <a href="${link}" target="_blank">
+            <button>Buy Now</button>
+          </a>
+        </div>
+      `;
+    });
+  }
 
-    function renderIndividual() {
-      const container = document.getElementById('individualPlans');
-      container.innerHTML = '';
+  function renderIndividual() {
+    const container = document.getElementById('individualPlans');
+    container.innerHTML = '';
 
-      individualPlans.forEach(item => {
-        const orderId = generateOrderId();
+    individualPlans.forEach(item => {
+      const orderId = generateOrderId();
+      const color = getColor(item.type);
 
-        const msg = encodeURIComponent(
+      const msg = encodeURIComponent(
 `Hello 👋
 
 I want to order:
@@ -186,47 +210,45 @@ I want to order:
 💰 Price: ₹${item.price}  
 🆔 Order ID: ${orderId}  
 
-Please share payment details 👋🏻`
+Please share payment details 👍`
 );
 
+      const link = `https://wa.me/${phoneNumber}?text=${msg}`;
 
-        const link = `https://wa.me/${phoneNumber}?text=${msg}`;
+      container.innerHTML += `
+        <div class="card" style="border-top: 3px solid ${color}">
+          <h3>${item.name}</h3>
+          <div class="price" style="color:${color}">₹${item.price}</div>
+          <a href="${link}" target="_blank">
+            <button style="background:${color}">Buy Now</button>
+          </a>
+        </div>
+      `;
+    });
+  }
 
-        container.innerHTML += `
-          <div class="card">
-            <h3>${item.name}</h3>
-            <div class="price">₹${item.price}</div>
-            <a href="${link}" target="_blank">
-              <button>Buy Now</button>
-            </a>
-          </div>
-        `;
-      });
-    }
+  function applyCoupon() {
+    const code = document.getElementById('coupon').value;
 
-    function applyCoupon() {
-      const code = document.getElementById('coupon').value;
-
-      if (code === "ABHAY") {
-        discount = 10;
-        appliedCoupon = "SAVE10";
-      } else if (code === "ADI") {
-        discount = 20;
-        appliedCoupon = "SAVE20";
-      } else {
-        discount = 0;
-        appliedCoupon = "NONE";
-        alert("Invalid Coupon");
-      }
-
-      renderCombo();
+    if (code === "ABHAY") {
+      discount = 10;
+      appliedCoupon = "SAVE10";
+    } else if (code === "ADI") {
+      discount = 20;
+      appliedCoupon = "SAVE20";
+    } else {
+      discount = 0;
+      appliedCoupon = "NONE";
+      alert("Invalid Coupon");
     }
 
     renderCombo();
-    renderIndividual();
+  }
 
-  </script>
-
+  renderCombo();
+  renderIndividual();
+</script>
+  
 </body>
 
 </html>
