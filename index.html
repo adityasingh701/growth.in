@@ -75,6 +75,12 @@ input {
 
 <script>
 let discount = 0;
+let appliedCoupon = "NONE";
+const phoneNumber = "918840583727";
+
+function generateOrderId() {
+  return "ORD" + Date.now();
+}
 
 const plans = [
   {name: "Starter", price: 199, details: "15K Views • 300 Likes • 80 Comments • 250 Reposts"},
@@ -90,14 +96,22 @@ function renderPlans() {
 
   plans.forEach(plan => {
     let finalPrice = plan.price - (plan.price * discount / 100);
+    finalPrice = Math.round(finalPrice);
+
+    const orderId = generateOrderId();
+
+    const message = encodeURIComponent(`Hi, I want to buy ${plan.name} Combo for ₹${finalPrice}. Please share details.`);
+
+    const whatsappLink = `https://wa.me/${phoneNumber}?text=${message}`;
+
     container.innerHTML += `
       <div class="card">
         <h2>${plan.name}</h2>
-        <div class="price">₹${Math.round(finalPrice)}</div>
+        <div class="price">₹${finalPrice}</div>
         <p>${plan.details}</p>
-        <a href="https://wa.me/918840582737?text=Hi%20I%20want%20to%20buy%20Growth%20Combo">
-<button>Buy Now</button>
-</a>
+        <a href="${whatsappLink}" target="_blank">
+          <button>Buy Now</button>
+        </a>
       </div>
     `;
   });
@@ -106,12 +120,15 @@ function renderPlans() {
 function applyCoupon() {
   const code = document.getElementById('coupon').value;
 
-  if(code === "ABHAY10") {
+  if(code === "ABHAY") {
     discount = 10;
-  } else if(code === "ADI20") {
+    appliedCoupon = "SAVE10";
+  } else if(code === "ADI") {
     discount = 20;
+    appliedCoupon = "SAVE20";
   } else {
     discount = 0;
+    appliedCoupon = "NONE";
     alert("Invalid Coupon");
   }
 
@@ -123,4 +140,5 @@ renderPlans();
 
 </body>
 </html>
+
 
