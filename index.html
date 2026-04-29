@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Premium Growth Services</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #0f172a;
+      color: #fff;
+    }
+
+    header {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .card {
+      background: #1e293b;
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .price {
+      font-size: 1.8rem;
+      margin: 10px 0;
+      color: #38bdf8;
+    }
+
+    button {
+      background: #38bdf8;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #000;
+    }
+
+    .coupon {
+      text-align: center;
+      margin: 30px;
+    }
+
+    input {
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      margin-right: 10px;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 1.8rem;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>🚀 Premium Instagram Growth</h1>
+    <p>Fast • Safe • Dashboard Tracking</p>
+  </header>
+
+  <div class="coupon">
+    <input type="text" id="coupon" placeholder="Enter Coupon Code">
+    <button onclick="applyCoupon()">Apply</button>
+  </div>
+
+  <h2 class="section-title">🔥 Combo Packages</h2>
+  <div class="container" id="comboPlans"></div>
+
+  <h2 class="section-title">⚡ Individual Services</h2>
+  <div class="container" id="individualPlans"></div>
+
+  <script>
+    let discount = 0;
+    let appliedCoupon = "NONE";
+
+    const phoneNumber = "918840583727";
+
+    function generateOrderId() {
+      return "ORD" + Date.now();
+    }
+
+    const comboPlans = [
+      { name: "Starter", price: 199, details: "15K Views • 300 Likes • 80 Comments • 250 Reposts" },
+      { name: "Basic", price: 349, details: "40K Views • 700 Likes • 200 Comments • 400 Reposts" },
+      { name: "Growth ⭐", price: 699, details: "95K Views • 1.5K Likes • 400 Comments • 600 Reposts" },
+      { name: "Pro", price: 1299, details: "250K Views • 3K Likes • 600 Comments • 1K Reposts" },
+      { name: "Elite", price: 2499, details: "600K Views • 8K Likes • 1.5K Comments • 3K Reposts" }
+    ];
+
+    const individualPlans = [
+      { name: "1K Views", price: 9 },
+      { name: "5K Views", price: 39 },
+      { name: "10K Views", price: 69 },
+      { name: "20K Views", price: 129 },
+
+      { name: "100 Likes", price: 29 },
+      { name: "200 Likes", price: 59 },
+      { name: "500 Likes", price: 119 },
+      { name: "1K Likes", price: 199 },
+
+      { name: "100 Comments", price: 49 },
+      { name: "500 Comments", price: 179 },
+      { name: "1K Comments", price: 329 },
+
+      { name: "500 Reposts", price: 59 },
+      { name: "1K Reposts", price: 99 },
+      { name: "2K Reposts", price: 149 },
+
+      { name: "100 Story Views", price: 19 },
+      { name: "500 Story Views", price: 79 },
+      { name: "1K Story Views", price: 119 }
+    ];
+
+    function renderCombo() {
+      const container = document.getElementById('comboPlans');
+      container.innerHTML = '';
+
+      comboPlans.forEach(plan => {
+        let finalPrice = Math.round(plan.price - (plan.price * discount / 100));
+
+        const orderId = generateOrderId();
+
+        const msg = encodeURIComponent(
+`Hello 👋
+
+I would like to place an order:
+
+📦 Service: ${plan.name} Combo  
+💰 Price: ₹${finalPrice}  
+🎟 Coupon: ${appliedCoupon}  
+🆔 Order ID: ${orderId}  
+
+Please share payment details to proceed 👋🏻`
+);
+
+        const link = `https://wa.me/${phoneNumber}?text=${msg}`;
+
+        container.innerHTML += `
+          <div class="card">
+            <h3>${plan.name}</h3>
+            <div class="price">₹${finalPrice}</div>
+            <p>${plan.details}</p>
+            <a href="${link}" target="_blank">
+              <button>Buy Now</button>
+            </a>
+          </div>
+        `;
+      });
+    }
+
+    function renderIndividual() {
+      const container = document.getElementById('individualPlans');
+      container.innerHTML = '';
+
+      individualPlans.forEach(item => {
+        const orderId = generateOrderId();
+
+        const msg = encodeURIComponent(
+`Hello 👋
+
+I want to order:
+
+📦 Service: ${item.name}  
+💰 Price: ₹${item.price}  
+🆔 Order ID: ${orderId}  
+
+Please share payment details 👋🏻`
+);
+
+
+        const link = `https://wa.me/${phoneNumber}?text=${msg}`;
+
+        container.innerHTML += `
+          <div class="card">
+            <h3>${item.name}</h3>
+            <div class="price">₹${item.price}</div>
+            <a href="${link}" target="_blank">
+              <button>Buy Now</button>
+            </a>
+          </div>
+        `;
+      });
+    }
+
+    function applyCoupon() {
+      const code = document.getElementById('coupon').value;
+
+      if (code === "ABHAY") {
+        discount = 10;
+        appliedCoupon = "SAVE10";
+      } else if (code === "ADI") {
+        discount = 20;
+        appliedCoupon = "SAVE20";
+      } else {
+        discount = 0;
+        appliedCoupon = "NONE";
+        alert("Invalid Coupon");
+      }
+
+      renderCombo();
+    }
+
+    renderCombo();
+    renderIndividual();
+
+  </script>
+
+</body>
+
+</html>
+
